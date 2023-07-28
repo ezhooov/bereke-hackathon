@@ -8,10 +8,17 @@ export const getOrders = () => {
     },
     {
       id: 2,
-      name: 'Заказ 1',
+      name: 'Заказ 2',
       employee: 1,
       sum: 100,
       status: 'in_progress'
+    },
+    {
+      id: 2,
+      name: 'Заказ 3',
+      employee: 2,
+      sum: 100,
+      status: 'fulfilled'
     }
   ]
 
@@ -51,7 +58,19 @@ export const getEmployees = () => {
   })
 }
 
-export const saveOrder = (values) => {
+export const createOrder = (order) => {
+  console.log('@@ order', order)
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 400)
+  })
+}
+
+export const updateOrder = (order) => {
+  console.log('@@ order', order)
+
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve()

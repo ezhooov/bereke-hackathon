@@ -15,6 +15,11 @@ const StyledContainer = styled.div`
   align-items: center;
 `
 
+const StyledTitle = styled(Title)`
+  margin-bottom: 0 !important;
+  padding: 12px 0;
+`
+
 const StyledButton = styled(Button)`
   width: 120px
 `
@@ -28,8 +33,8 @@ const statusMap = {
 }
 
 export const OrderPage = () => {
-  const { data: orders } = useQuery('order_list', getOrders)
-  const { data: employees } = useQuery('employee_list', getEmployees)
+  const { data: orders, isFetching: isFetchingOrders } = useQuery('order_list', getOrders)
+  const { data: employees, isFetching: isFetchingEmployees } = useQuery('employee_order_list', getEmployees)
 
   const { list: employeeList, dictionary: employeeMap } = employees || {}
 
@@ -45,7 +50,7 @@ export const OrderPage = () => {
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries('order_list')
-      queryClient.invalidateQueries('employee_list')
+      queryClient.invalidateQueries('employee_order_list')
     }
   })
   const assign = (order) => () => {
@@ -58,18 +63,21 @@ export const OrderPage = () => {
 
       // Invalidate and refetch
       queryClient.invalidateQueries('order_list')
-      queryClient.invalidateQueries('employee_list')
+      queryClient.invalidateQueries('employee_order_list')
     }
   })
 
+  const [payingId, setPayingId] = useState(null)
   const { isLoading: paying, mutateAsync: payMutation } = useMutation(createOrder, {
     onSuccess: () => {
+      setPayingId(null)
       // Invalidate and refetch
       queryClient.invalidateQueries('order_list')
-      queryClient.invalidateQueries('employee_list')
+      queryClient.invalidateQueries('employee_order_list')
     }
   })
   const pay = (order) => () => {
+    setPayingId(order.id)
     payMutation({ ...order, status: 'payed' })
   }
 
@@ -115,8 +123,8 @@ export const OrderPage = () => {
             <StyledButton
               type='primary'
               onClick={pay(order)}
-              disabled={paying}
-              loading={paying}
+              disabled={paying && order.id === payingId}
+              loading={paying && order.id === payingId}
             >
               Оплатить
             </StyledButton>
@@ -130,12 +138,12 @@ export const OrderPage = () => {
   return (
     <section>
       <StyledContainer>
-        <Title level={2}>Заказы</Title>
+        <StyledTitle level={2}>Заказы</StyledTitle>
         <Button type='primary' onClick={() => setCreateModalOpen(true)}>Создать</Button>
       </StyledContainer>
 
       <Table
-        loading={!orders && !employeeMap}
+        loading={isFetchingOrders || isFetchingEmployees}
         columns={getTableColumns(employeeMap || {})}
         dataSource={orders}
         pagination={false}
@@ -155,7 +163,7 @@ export const OrderPage = () => {
         onCancel={() => { setAssignModalOpen(false); setOrderToAssign(null) }}
       >
         <AssignOrder
-          order={{ ...orderToAssign }}
+          order={orderToAssign}
           onAssignSubmit={assignMutation}
           pending={assigning}
           employeeList={employeeList || []}

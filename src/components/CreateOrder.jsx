@@ -1,5 +1,5 @@
 import { Button, Input, InputNumber } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 const StyledForm = styled.form`
@@ -16,7 +16,14 @@ const StyledInputNumber = styled(InputNumber)`
 
 export const CreateOrder = ({ onSave, pending }) => {
   const [name, setName] = useState('')
-  const [sum, setSum] = useState()
+  const [sum, setSum] = useState(null)
+
+  useEffect(() => {
+    if (!pending) {
+      setName('')
+      setSum(null)
+    }
+  }, [pending])
 
   const onClick = () => {
     onSave({ name, sum })

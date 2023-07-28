@@ -12,6 +12,10 @@ const menu = [
   {
     key: '/orders',
     label: <Link to='/orders'>Заказы</Link>
+  },
+  {
+    key: '/employees',
+    label: <Link to='/employees'>Исполнители</Link>
   }
 ]
 

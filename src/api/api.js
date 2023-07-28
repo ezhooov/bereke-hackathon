@@ -29,19 +29,40 @@ export const getOrders = () => {
   })
 }
 
+export const createOrder = (order) => {
+  console.log('@@ order', order)
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 400)
+  })
+}
+
+export const updateOrder = (order) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 400)
+  })
+}
+
 export const getEmployees = () => {
   const list = [
     {
       id: 1,
-      name: 'Иван'
+      name: 'Иван',
+      iin: 123012300123
     },
     {
       id: 2,
-      name: 'Станислав'
+      name: 'Станислав',
+      iin: 12301231231
     },
     {
       id: 3,
-      name: 'Айгерим'
+      name: 'Айгерим',
+      iin: 12301212313
     }
   ]
 
@@ -58,9 +79,7 @@ export const getEmployees = () => {
   })
 }
 
-export const createOrder = (order) => {
-  console.log('@@ order', order)
-
+export const deleteEmployee = (id) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve()
@@ -68,9 +87,7 @@ export const createOrder = (order) => {
   })
 }
 
-export const updateOrder = (order) => {
-  console.log('@@ order', order)
-
+export const addEmployee = (id) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve()

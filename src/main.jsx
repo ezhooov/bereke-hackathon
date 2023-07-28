@@ -7,6 +7,7 @@ import {
 import { AppLayout } from './AppLayout.jsx'
 import { ErrorPage } from '../ErrorPage.jsx'
 import { OrderPage } from './pages/OrderPage.jsx'
+import { EmployeePage } from './pages/EmployeePage.jsx'
 import { ConfigProvider } from 'antd'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import 'antd/dist/reset.css'
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: '/orders',
         element: <OrderPage />
+      },
+      {
+        path: '/employees',
+        element: <EmployeePage />
       }
     ]
   }

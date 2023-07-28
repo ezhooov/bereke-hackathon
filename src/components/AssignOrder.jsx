@@ -14,8 +14,10 @@ export const AssignOrder = ({ order, onAssignSubmit, pending, employeeList }) =>
   const [employee, setEmployee] = useState(null)
 
   useEffect(() => {
-    setEmployee(null)
-  }, [order])
+    if (!pending) {
+      setEmployee(null)
+    }
+  }, [pending])
 
   const onClick = () => {
     onAssignSubmit({ ...order, employee, status: 'payed' })

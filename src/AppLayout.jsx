@@ -1,88 +1,103 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom'
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons'
-import { Breadcrumb, Layout, Menu, theme } from 'antd'
+import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Layout, Menu, theme, Typography } from 'antd'
+import styled from 'styled-components'
+import { SmileOutlined } from '@ant-design/icons'
 
-const { Header, Content, Sider } = Layout
+const { Title } = Typography
 
-const items1 = ['1', '2', '3'].map((key) => ({
-  key,
-  label: `nav ${key}`
-}))
-const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
-  const key = String(index + 1)
-  return {
-    key: `sub${key}`,
-    icon: React.createElement(icon),
-    label: `subnav ${key}`,
-    children: new Array(4).fill(null).map((_, j) => {
-      const subKey = index * 4 + j + 1
-      return {
-        key: subKey,
-        label: `option${subKey}`
-      }
-    })
+const { Content, Sider, Header } = Layout
+
+const menu = [
+  {
+    key: '/orders',
+    label: <Link to='/orders'>Заказы</Link>
   }
-})
+]
+
+const StyledSider = styled(Sider)`
+  background: ${props => props.colorBgContainer};
+`
+
+const StyledContentLayout = styled(Layout)`
+  padding: 0 24px 24px;
+`
+
+const StyledMenu = styled(Menu)`
+  height: 100%;
+  border-right: 0;
+`
+
+const StyledContent = styled(Content)`
+  padding: 24px;
+  margin: 16px;
+  min-height: 280px;
+  background: ${props => props.background};
+  border-radius: 6px;
+`
+
+const StyledLayout = styled(Layout)`
+  min-height: 100vh;
+`
+
+const StyledHeader = styled(Header)`
+  background: ${props => props.background};
+  padding-inline: 24px;
+  display: flex;
+  align-items: center;
+`
+
+const StyledLogo = styled(SmileOutlined)`
+  color: ${props => props.color};
+  font-size: 32px;
+`
+
+const StyledTitle = styled(Title)`
+  color: ${props => props.color} !important;
+  margin-bottom: 0 !important;
+`
+
+const StyledLogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`
+
 export const AppLayout = () => {
   const {
-    token: { colorBgContainer }
+    token: { colorBgContainer, colorPrimary }
   } = theme.useToken()
+  const location = useLocation()
+
+  const selectedMenuKeys = menu.map((menuItem) => menuItem.key).filter(path => location.pathname === path)
+
   return (
-    <Layout>
-      <Header
-        style={{
-          display: 'flex',
-          alignItems: 'center'
-        }}
-      >
-        <div className='demo-logo' />
-        <Menu theme='dark' mode='horizontal' defaultSelectedKeys={['2']} items={items1} />
-      </Header>
+    <StyledLayout>
+      <StyledHeader background={colorPrimary}>
+        <StyledLogoContainer>
+          <StyledLogo color={colorBgContainer} />
+          <StyledTitle color={colorBgContainer} level={2}>BBusiness</StyledTitle>
+        </StyledLogoContainer>
+      </StyledHeader>
       <Layout>
-        <Sider
+        <StyledSider
           width={200}
-          style={{
-            background: colorBgContainer
-          }}
+          colorBgContainer={colorBgContainer}
         >
-          <Menu
+          <StyledMenu
             mode='inline'
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            style={{
-              height: '100%',
-              borderRight: 0
-            }}
-            items={items2}
+            items={menu}
+            selectedKeys={selectedMenuKeys}
           />
-        </Sider>
-        <Layout
-          style={{
-            padding: '0 24px 24px'
-          }}
-        >
-          <Breadcrumb
-            style={{
-              margin: '16px 0'
-            }}
-          >
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
-          </Breadcrumb>
-          <Content
-            style={{
-              padding: 24,
-              margin: 0,
-              minHeight: 280,
-              background: colorBgContainer
-            }}
+        </StyledSider>
+        <StyledContentLayout>
+          <StyledContent
+            background={colorBgContainer}
           >
             <Outlet />
-          </Content>
-        </Layout>
+          </StyledContent>
+        </StyledContentLayout>
       </Layout>
-    </Layout>
+    </StyledLayout>
   )
 }

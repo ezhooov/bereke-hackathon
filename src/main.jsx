@@ -6,10 +6,11 @@ import {
 } from 'react-router-dom'
 import { AppLayout } from './AppLayout.jsx'
 import { ErrorPage } from '../ErrorPage.jsx'
-import { MainPage } from './pages/MainPage.jsx'
+import { OrderPage } from './pages/OrderPage.jsx'
 import { ConfigProvider } from 'antd'
-
+import { QueryClient, QueryClientProvider } from 'react-query'
 import 'antd/dist/reset.css'
+import { MainPage } from './pages/MainPage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -20,15 +21,29 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <MainPage />
+      },
+      {
+        path: '/orders',
+        element: <OrderPage />
       }
     ]
   }
 ])
 
+const queryClient = new QueryClient()
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ConfigProvider>
-      <RouterProvider router={router} />
-    </ConfigProvider>
+    <QueryClientProvider client={queryClient}>
+      <ConfigProvider theme={{
+        token: {
+          colorPrimary: '#43B741',
+          colorLink: '#43B741'
+        }
+      }}
+      >
+        <RouterProvider router={router} />
+      </ConfigProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 )

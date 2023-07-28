@@ -14,6 +14,10 @@ const menu = [
     label: <Link to='/orders'>Заказы</Link>
   },
   {
+    key: '/taxes',
+    label: <Link to='/taxes'>Налоги</Link>
+  },
+  {
     key: '/employees',
     label: <Link to='/employees'>Исполнители</Link>
   }

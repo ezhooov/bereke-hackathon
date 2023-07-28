@@ -12,6 +12,7 @@ import { ConfigProvider } from 'antd'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import 'antd/dist/reset.css'
 import { MainPage } from './pages/MainPage.jsx'
+import { TaxPage } from './pages/TaxPage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: '/employees',
         element: <EmployeePage />
+      },
+      {
+        path: '/taxes',
+        element: <TaxPage />
       }
     ]
   }

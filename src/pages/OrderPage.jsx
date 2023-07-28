@@ -91,7 +91,7 @@ export const OrderPage = () => {
       title: 'Исполнитель',
       key: 'employee',
       dataIndex: 'employee',
-      render: (_, { employee }) => (
+      render: (_, { employee = '' }) => (
         <>{(employeeDictionary[employee] && employeeDictionary[employee].name) || 'Не назначен'}</>
       )
     },
@@ -104,7 +104,7 @@ export const OrderPage = () => {
       title: 'Статус',
       dataIndex: 'status',
       key: 'status',
-      render: (_, { status }) => (
+      render: (_, { status = '' }) => (
         <>{statusMap[status] || ''}</>
       )
     },

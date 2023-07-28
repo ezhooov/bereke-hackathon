@@ -57,7 +57,7 @@ export const EmployeePage = () => {
         loading={isFetching}
         itemLayout='horizontal'
         dataSource={employees}
-        renderItem={({ id, iin, name }) => (
+        renderItem={({ id, iin = '', name = '' }) => (
           <List.Item
             key={id}
             actions={[

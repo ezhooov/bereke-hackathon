@@ -1,8 +1,10 @@
-import { Typography, List, Skeleton, Button, Divider } from 'antd'
+import { Typography, Button, Table, Modal } from 'antd'
 import styled from 'styled-components'
-import { useQuery } from 'react-query'
-import { getOrders } from '../api/api.js'
-import { Link } from 'react-router-dom'
+import { useMutation, useQuery } from 'react-query'
+import { getOrders, getEmployees, saveOrder } from '../api/api.js'
+import { useState } from 'react'
+import { CreateOrder } from '../components/CreateOrder.jsx'
+import { queryClient } from '../main.jsx'
 
 const { Title } = Typography
 
@@ -11,34 +13,84 @@ const StyledContainer = styled.div`
   justify-content: space-between;
   align-items: center;
 `
+const statusMap = {
+  new: 'Новый',
+  in_progress: 'В работе',
+  fullfiled: 'Выполнен',
+  payed: 'Оплачен',
+  cancelled: 'Отменен'
+}
 
 export const OrderPage = () => {
-  const { data, isLoading } = useQuery('order_list', getOrders)
+  const { data: orders } = useQuery('order_list', getOrders)
+  const { data: employees } = useQuery('employee_list', getEmployees)
+
+  const { list: employeeList, dictionary: employeeMap } = employees || {}
+  const [createModalOpen, setCreateModalOpen] = useState(false)
+
+  const { isLoading: saving, mutateAsync: saveMutation } = useMutation(saveOrder, {
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries('order_list')
+      queryClient.invalidateQueries('employee_list')
+    }
+  })
+
+  const getTableColumns = (employeeDictionary) => ([
+    {
+      title: 'Наименование',
+      dataIndex: 'name',
+      key: 'name'
+    },
+    {
+      title: 'Исполнитель',
+      key: 'employee',
+      dataIndex: 'employee',
+      render: (_, { employee }) => (
+        <>{(employeeDictionary[employee] && employeeDictionary[employee].name) || 'Не назначен'}</>
+      )
+    },
+    {
+      title: 'Сумма',
+      dataIndex: 'sum',
+      key: 'sum'
+    },
+    {
+      title: 'Статус',
+      dataIndex: 'status',
+      key: 'status',
+      render: (_, { status }) => (
+        <>{statusMap[status] || ''}</>
+      )
+    }
+  ])
+
+  const onSave = async (values) => {
+    await saveMutation(values)
+    setCreateModalOpen(false)
+  }
 
   return (
     <section>
       <StyledContainer>
         <Title level={2}>Заказы</Title>
-        <Button type='primary'>Создать</Button>
+        <Button type='primary' onClick={() => setCreateModalOpen(true)}>Создать</Button>
       </StyledContainer>
-      <List
-        loading={isLoading}
-        itemLayout='horizontal'
-        dataSource={data}
-        renderItem={(item) => (
-          <List.Item
-            key={item.id}
-            actions={[<Link key={item.id} to={`/orders/${item.id}`}>Редактировать</Link>]}
-          >
-            <Skeleton title loading={item.loading} active>
-              <List.Item.Meta
-                title={item.title}
-                description={item.assignee}
-              />
-            </Skeleton>
-          </List.Item>
-        )}
+
+      <Table
+        loading={!orders && !employeeMap}
+        columns={getTableColumns(employeeMap || {})}
+        dataSource={orders}
+        pagination={false}
       />
+      <Modal
+        title={<Title level={4}>Создание заказа</Title>}
+        open={createModalOpen}
+        footer={null}
+        onCancel={() => setCreateModalOpen(false)}
+      >
+        <CreateOrder onSave={onSave} pending={saving} />
+      </Modal>
     </section>
   )
 }

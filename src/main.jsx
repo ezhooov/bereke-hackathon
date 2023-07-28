@@ -4,14 +4,17 @@ import {
   createBrowserRouter,
   RouterProvider
 } from 'react-router-dom'
-import { Layout } from './Layout.jsx'
+import { AppLayout } from './AppLayout.jsx'
 import { ErrorPage } from '../ErrorPage.jsx'
 import { MainPage } from './pages/MainPage.jsx'
+import { ConfigProvider } from 'antd'
+
+import 'antd/dist/reset.css'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout />,
+    element: <AppLayout />,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -24,6 +27,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ConfigProvider>
+      <RouterProvider router={router} />
+    </ConfigProvider>
   </React.StrictMode>
 )

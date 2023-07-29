@@ -20,7 +20,7 @@ export const AssignOrder = ({ order, onAssignSubmit, pending, employeeList }) =>
   }, [pending])
 
   const onClick = () => {
-    onAssignSubmit({ ...order, employee, status: 'payed' })
+    onAssignSubmit({ ...order, employee, status: 'in_progress' })
   }
 
   return (

@@ -1,4 +1,4 @@
-import { Typography, Button, Table, Modal } from 'antd'
+import { Typography, Button, Table, Modal, Tag } from 'antd'
 import styled from 'styled-components'
 import { useMutation, useQuery } from 'react-query'
 import { getOrders, getEmployees, createOrder, updateOrder } from '../api/api.js'
@@ -6,8 +6,13 @@ import { useState } from 'react'
 import { CreateOrder } from '../components/CreateOrder.jsx'
 import { queryClient } from '../main.jsx'
 import { AssignOrder } from '../components/AssignOrder.jsx'
-import { orderStatusMap } from '../utils/dictionaries.js'
+import { orderColorMap, orderStatusMap } from '../utils/dictionaries.js'
 import { useOutletContext } from 'react-router-dom'
+
+const StyledTag = styled(Tag)`
+  width: 100px;
+  text-align: center;
+`
 
 const { Title } = Typography
 
@@ -31,6 +36,8 @@ export const OrderPage = () => {
 
   const { data: orders, isFetching: isFetchingOrders } = useQuery('order_list', getOrders)
   const { data: employees, isFetching: isFetchingEmployees } = useQuery('employee_order_list', getEmployees)
+
+  console.log('@@', orders)
 
   const { list: employeeList, dictionary: employeeMap } = employees || {}
 
@@ -78,7 +85,7 @@ export const OrderPage = () => {
   })
 
   const [payingId, setPayingId] = useState(null)
-  const { isLoading: paying, mutateAsync: payMutation } = useMutation(createOrder, {
+  const { isLoading: paying, mutateAsync: payMutation } = useMutation(updateOrder, {
     onSuccess: () => {
       setPayingId(null)
       // Invalidate and refetch
@@ -102,12 +109,16 @@ export const OrderPage = () => {
     {
       title: 'Наименование',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
+      width: 150,
+      align: 'left'
     },
     {
       title: 'Исполнитель',
       key: 'employee',
       dataIndex: 'employee',
+      width: 150,
+      align: 'left',
       render: (_, { employee = '' }) => (
         <>{(employeeDictionary[employee] && employeeDictionary[employee].name) || 'Не назначен'}</>
       )
@@ -115,14 +126,18 @@ export const OrderPage = () => {
     {
       title: 'Сумма',
       dataIndex: 'sum',
-      key: 'sum'
+      key: 'sum',
+      width: 100,
+      align: 'left'
     },
     {
       title: 'Статус',
       dataIndex: 'status',
       key: 'status',
+      width: 50,
+      align: 'left',
       render: (_, { status = '' }) => (
-        <>{orderStatusMap[status] || ''}</>
+        <StyledTag color={orderColorMap[status]}>{orderStatusMap[status] || ''}</StyledTag>
       )
     },
     {

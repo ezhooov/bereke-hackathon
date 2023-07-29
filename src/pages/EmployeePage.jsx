@@ -2,7 +2,7 @@ import { Button, List, Modal, Typography } from 'antd'
 import styled from 'styled-components'
 import { useMutation, useQuery } from 'react-query'
 import { queryClient } from '../main.jsx'
-import { deleteEmployee, getEmployees } from '../api/api.js'
+import { addEmployee, deleteEmployee, getEmployees } from '../api/api.js'
 import { useState } from 'react'
 import { AddEmployee } from '../components/AddEmployee.jsx'
 import { useOutletContext } from 'react-router-dom'
@@ -45,7 +45,7 @@ export const EmployeePage = () => {
   }
 
   const [addModalOpen, setAddModalOpen] = useState(false)
-  const { isLoading: saving, mutate: addMutate } = useMutation(deleteEmployee, {
+  const { isLoading: saving, mutate: addMutate } = useMutation(addEmployee, {
     onSuccess: () => {
       setAddModalOpen(false)
       // Invalidate and refetch

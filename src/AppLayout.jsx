@@ -46,6 +46,8 @@ const StyledContent = styled(Content)`
 
 const StyledLayout = styled(Layout)`
   min-height: 100vh;
+  min-width: 1200px;
+  overflow-x: scroll;
 `
 
 const StyledHeader = styled(Header)`

@@ -6,6 +6,13 @@ export const orderStatusMap = {
   cancelled: 'Отменен'
 }
 
+export const orderColorMap = {
+  new: undefined,
+  in_progress: 'blue',
+  fulfilled: 'green',
+  payed: 'green'
+}
+
 export const taxNamesMap = {
   OPV: 'Пенсионные взносы',
   VOCMC: 'Взносы на обязательное мед.страхование',

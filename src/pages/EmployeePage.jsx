@@ -5,6 +5,7 @@ import { queryClient } from '../main.jsx'
 import { deleteEmployee, getEmployees } from '../api/api.js'
 import { useState } from 'react'
 import { AddEmployee } from '../components/AddEmployee.jsx'
+import { useOutletContext } from 'react-router-dom'
 
 const { Title } = Typography
 
@@ -19,6 +20,7 @@ const StyledTitle = styled(Title)`
 `
 
 export const EmployeePage = () => {
+  const { notificationApi } = useOutletContext()
   const { data, isFetching } = useQuery('employee_list', getEmployees)
   const { list: employees } = data || {}
 
@@ -28,6 +30,13 @@ export const EmployeePage = () => {
       setRemovingId(null)
       // Invalidate and refetch
       queryClient.invalidateQueries('employee_list')
+    },
+    onError: () => {
+      notificationApi.error({
+        message: 'Упс',
+        description:
+          'Что-то пошло не так!'
+      })
     }
   })
   const removeEmployee = (id) => () => {
@@ -41,6 +50,13 @@ export const EmployeePage = () => {
       setAddModalOpen(false)
       // Invalidate and refetch
       queryClient.invalidateQueries('employee_list')
+    },
+    onError: () => {
+      notificationApi.error({
+        message: 'Упс',
+        description:
+          'Что-то пошло не так!'
+      })
     }
   })
   const onSave = (values) => {
@@ -56,7 +72,7 @@ export const EmployeePage = () => {
       <List
         loading={isFetching}
         itemLayout='horizontal'
-        dataSource={employees}
+        dataSource={employees || []}
         renderItem={({ id, iin = '', name = '' }) => (
           <List.Item
             key={id}

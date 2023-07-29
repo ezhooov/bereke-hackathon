@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { Layout, Menu, theme, Typography } from 'antd'
+import { Layout, Menu, notification, theme, Typography } from 'antd'
 import styled from 'styled-components'
 import { SmileOutlined } from '@ant-design/icons'
 
@@ -72,6 +72,8 @@ const StyledLogoContainer = styled.div`
 `
 
 export const AppLayout = () => {
+  const [api, contextHolder] = notification.useNotification()
+
   const {
     token: { colorBgContainer, colorPrimary }
   } = theme.useToken()
@@ -102,10 +104,11 @@ export const AppLayout = () => {
           <StyledContent
             background={colorBgContainer}
           >
-            <Outlet />
+            <Outlet context={{ notificationApi: api }} />
           </StyledContent>
         </StyledContentLayout>
       </Layout>
+      {contextHolder}
     </StyledLayout>
   )
 }

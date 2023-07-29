@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { countTax, getEmployees, getTaxes, updateTax } from '../api/api.js'
 import { queryClient } from '../main.jsx'
+import { useOutletContext } from 'react-router-dom'
 
 const { Title } = Typography
 
@@ -20,6 +21,7 @@ const StyledTitle = styled(Title)`
 `
 
 export const TaxPage = () => {
+  const { notificationApi } = useOutletContext()
   const { data: employees = [], isFetching: isFetchingEmployees } = useQuery('taxes_employee_list', getEmployees)
   const { list: employeeList, dictionary: employeeMap } = employees || {}
 
@@ -31,6 +33,13 @@ export const TaxPage = () => {
       setCountModalOpen(false)
       queryClient.invalidateQueries('taxes_employee_list')
       queryClient.invalidateQueries('taxes_list')
+    },
+    onError: () => {
+      notificationApi.error({
+        message: 'Упс',
+        description:
+          'Что-то пошло не так!'
+      })
     }
   })
 
@@ -41,6 +50,13 @@ export const TaxPage = () => {
       setCountModalOpen(false)
       queryClient.invalidateQueries('taxes_employee_list')
       queryClient.invalidateQueries('taxes_list')
+    },
+    onError: () => {
+      notificationApi.error({
+        message: 'Упс',
+        description:
+          'Что-то пошло не так!'
+      })
     }
   })
 
@@ -52,6 +68,7 @@ export const TaxPage = () => {
       title: 'Наименование',
       dataIndex: 'name',
       key: 'name',
+      width: 300,
       render: (_, tax) => {
         return (
           <Button

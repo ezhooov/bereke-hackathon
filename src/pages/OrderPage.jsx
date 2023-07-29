@@ -7,6 +7,7 @@ import { CreateOrder } from '../components/CreateOrder.jsx'
 import { queryClient } from '../main.jsx'
 import { AssignOrder } from '../components/AssignOrder.jsx'
 import { orderStatusMap } from '../utils/dictionaries.js'
+import { useOutletContext } from 'react-router-dom'
 
 const { Title } = Typography
 
@@ -26,6 +27,8 @@ const StyledButton = styled(Button)`
 `
 
 export const OrderPage = () => {
+  const { notificationApi } = useOutletContext()
+
   const { data: orders, isFetching: isFetchingOrders } = useQuery('order_list', getOrders)
   const { data: employees, isFetching: isFetchingEmployees } = useQuery('employee_order_list', getEmployees)
 
@@ -44,6 +47,13 @@ export const OrderPage = () => {
       // Invalidate and refetch
       queryClient.invalidateQueries('order_list')
       queryClient.invalidateQueries('employee_order_list')
+    },
+    onError: () => {
+      notificationApi.error({
+        message: 'Упс',
+        description:
+        'Что-то пошло не так!'
+      })
     }
   })
   const assign = (order) => () => {
@@ -57,6 +67,13 @@ export const OrderPage = () => {
       // Invalidate and refetch
       queryClient.invalidateQueries('order_list')
       queryClient.invalidateQueries('employee_order_list')
+    },
+    onError: () => {
+      notificationApi.error({
+        message: 'Упс',
+        description:
+          'Что-то пошло не так!'
+      })
     }
   })
 
@@ -67,6 +84,13 @@ export const OrderPage = () => {
       // Invalidate and refetch
       queryClient.invalidateQueries('order_list')
       queryClient.invalidateQueries('employee_order_list')
+    },
+    onError: () => {
+      notificationApi.error({
+        message: 'Упс',
+        description:
+          'Что-то пошло не так!'
+      })
     }
   })
   const pay = (order) => () => {
@@ -137,7 +161,7 @@ export const OrderPage = () => {
       <Table
         loading={isFetchingOrders || isFetchingEmployees}
         columns={getTableColumns(employeeMap || {})}
-        dataSource={orders}
+        dataSource={orders || []}
         pagination={false}
       />
       <Modal

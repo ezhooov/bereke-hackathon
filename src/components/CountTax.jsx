@@ -24,15 +24,15 @@ const StyledSelectContainer = styled.div`
 const taxSelectOptions = [
   {
     label: 'Пенсионные взносы',
-    value: 'Пенсионные взносы'
+    value: 'OPV'
   },
   {
     label: 'Взносы на обязательное мед.страхование',
-    value: 'Взносы на обязательное мед.страхование'
+    value: 'VOCMC'
   },
   {
     label: 'Подоходный налог',
-    value: 'Подоходный налог'
+    value: 'IPN'
   }
 ]
 
@@ -48,6 +48,7 @@ export const CountTax = ({ onSave, pending, employeeList, employeeMap }) => {
   useEffect(() => {
     if (!pending) {
       setName(null)
+      setEmployees([null])
     }
   }, [pending])
   const onClick = () => {
@@ -55,10 +56,10 @@ export const CountTax = ({ onSave, pending, employeeList, employeeMap }) => {
 
     const result = {
       name,
-      fullEmployees
+      employees: fullEmployees
     }
 
-    console.log('@@ result', result)
+    onSave(result)
   }
 
   const onChange = (index) => (value) => {
@@ -79,7 +80,7 @@ export const CountTax = ({ onSave, pending, employeeList, employeeMap }) => {
     <StyledForm>
       <Select size='large' options={taxSelectOptions} value={name} onChange={setName} placeholder='Наименование налога' />
       {employees.map((item, index) => (
-        <StyledSelectContainer>
+        <StyledSelectContainer key={item}>
           <StyledSelect key={item} size='large' options={employeeOptions} value={item} onChange={onChange(index)} placeholder='Исполнитель' />
           <Button type='text' icon={<MinusCircleOutlined />} onClick={removeEmployee(index)} disabled={employees.length === 1} />
         </StyledSelectContainer>

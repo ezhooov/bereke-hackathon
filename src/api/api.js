@@ -94,3 +94,74 @@ export const addEmployee = (id) => {
     }, 400)
   })
 }
+
+export const countTax = (values) => {
+  console.log('@@', values)
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 400)
+  })
+}
+
+export const getTaxes = (values) => {
+  const taxes = [
+    {
+      id: 1,
+      name: 'Пенсионные взносы',
+      sum: 10000,
+      isPayed: true
+    },
+    {
+      id: 2,
+      name: 'Подоходный налог',
+      sum: 20000,
+      isPayed: false
+    }
+  ]
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(taxes)
+    }, 400)
+  })
+}
+
+export const updateTax = (values) => {
+  console.log('@@', values)
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 400)
+  })
+}
+
+export const getTaxById = (id) => {
+  console.log('@ getById', id)
+
+  const tax = {
+    id,
+    name: 'OPV',
+    sum: 30000,
+    employees: [
+      {
+        id: 1,
+        name: 'Иван',
+        sum: 10000
+      },
+      {
+        id: 2,
+        name: 'Станислав',
+        sum: 20000
+      }
+    ]
+  }
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(tax)
+    }, 400)
+  })
+}

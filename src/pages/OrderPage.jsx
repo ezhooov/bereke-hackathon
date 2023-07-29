@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { CreateOrder } from '../components/CreateOrder.jsx'
 import { queryClient } from '../main.jsx'
 import { AssignOrder } from '../components/AssignOrder.jsx'
+import { orderStatusMap } from '../utils/dictionaries.js'
 
 const { Title } = Typography
 
@@ -23,14 +24,6 @@ const StyledTitle = styled(Title)`
 const StyledButton = styled(Button)`
   width: 120px
 `
-
-const statusMap = {
-  new: 'Новый',
-  in_progress: 'В работе',
-  fulfilled: 'Выполнен',
-  payed: 'Оплачен',
-  cancelled: 'Отменен'
-}
 
 export const OrderPage = () => {
   const { data: orders, isFetching: isFetchingOrders } = useQuery('order_list', getOrders)
@@ -105,7 +98,7 @@ export const OrderPage = () => {
       dataIndex: 'status',
       key: 'status',
       render: (_, { status = '' }) => (
-        <>{statusMap[status] || ''}</>
+        <>{orderStatusMap[status] || ''}</>
       )
     },
     {
@@ -141,7 +134,6 @@ export const OrderPage = () => {
         <StyledTitle level={2}>Заказы</StyledTitle>
         <Button type='primary' onClick={() => setCreateModalOpen(true)}>Создать</Button>
       </StyledContainer>
-
       <Table
         loading={isFetchingOrders || isFetchingEmployees}
         columns={getTableColumns(employeeMap || {})}
